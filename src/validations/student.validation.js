@@ -27,6 +27,7 @@ const createStudent = {
         bankCode: joi.string().custom(bankCodeValidation),
         personalInformationConsentStatus: joi.number().valid(0, 1).required(),
         rawTransaction: joi.string().required(),
+        studentHash: joi.string().required(),
     }).and("bankAccountNumber", "bankCode"),
 }
 const getStudentById = {

@@ -36,7 +36,7 @@ const createStudent = catchAsync(async (req, res) => {
         throw new ApiError(httpStatus.BAD_REQUEST, 'studentId already used')
     }
 
-    const { rawTransaction} = { ...req.query, ...req.params, ...req.body }
+    const { rawTransaction, studentHash} = { ...req.query, ...req.params, ...req.body }
 
     // md5, salt를 사용한 password 암호화, db에 저장되는 값은 암호화된 password 입니다.
     const md5password = authService.hashPassword(password);
@@ -48,7 +48,7 @@ const createStudent = catchAsync(async (req, res) => {
     try{
         const receipt = await caverService.sendRawTransactionWithSignAsFeePayer(rawTransaction)
 
-        const createStudentDTO = new CreateStudentDTO({ ...req.query, ...req.params, ...req.body, salt, password: hashPassword, transactionHash: receipt.transactionHash })
+        const createStudentDTO = new CreateStudentDTO({ ...req.query, ...req.params, ...req.body, salt, password: hashPassword, transactionHash: receipt.transactionHash, studentHash:studentHash })
         const student = await studentService.createStudent(createStudentDTO);
 
         return res.status(httpStatus.CREATED).json({
